@@ -9,7 +9,7 @@ bearer_token = os.environ.get("BEARER_TOKEN")
 
 
 def create_url():
-    return "https://api.twitter.com/2/tweets/sample/stream"
+    return "https://api.twitter.com/2/tweets/sample/stream?expansions=author_id"
 
 
 def bearer_oauth(r):
