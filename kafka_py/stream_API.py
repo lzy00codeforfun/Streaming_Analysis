@@ -43,7 +43,7 @@ class twitter_stream():
                 msg_cnt += 1
                 if num_to_get != None and msg_cnt >= num_to_get:
                     kafka_producer.flush()
-                    # break
+                    break
         if response.status_code != 200:
             raise Exception(
                 "Request returned an error: {} {}".format(
