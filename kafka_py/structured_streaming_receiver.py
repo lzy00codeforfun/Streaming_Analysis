@@ -13,7 +13,8 @@ from kafka.errors import KafkaError, KafkaTimeoutError
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.sql import SparkSession, Row
-
+from pyspark.sql.functions import explode
+from pyspark.sql.functions import split, decode
 #
 logger_format = '%(asctime)-15s %(message)s'
 logging.basicConfig(format=logger_format)
@@ -34,6 +35,7 @@ if __name__ == "__main__":
 
     spark = SparkSession.builder.appName('spark_word2vec').getOrCreate()
 
+    spark.sparkContext.setLogLevel("WARN")
     topic = 'quickstart-events'
     bootstrap_servers = 'localhost:9092'
     
@@ -43,28 +45,34 @@ if __name__ == "__main__":
         .option("kafka.bootstrap.servers", bootstrap_servers) \
         .option("subscribe", topic) \
         .load()
-    df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+    # df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)") 
 
-       
+    # Decode and Split the lines into words
+    def get_text_info(x):
+        # spark sql json deserialize 
+        # json_schema = spark.read.json(words.rdd.map(lambda row: row.json)).schema
+        text_map = from_json(x, "MAP<STRING,STRING>")
+        text_map = from_json(text_map["data"], "MAP<STRING,STRING>")
+        return text_map["text"]
+    
+    from pyspark.sql.functions import from_json, col
+    words = df.withColumn('value', decode(df.value, 'UTF-8'))  #.map(get_info)
+    words = words.withColumn('value', get_text_info(col('value')))
 
+    words = words.select(
+        explode(
+            split(words.value, " ")
+        ).alias("word")
+    )
 
-    print(df, type(df))
-    def print_json(x):
-        print(type(x), x)
-    # df.rdd.map(print_json).collect()
+    # Generate running word count
+    wordCounts = words.groupBy("word").count()
 
-    query1 = df.writeStream \
+    query = wordCounts \
+        .writeStream \
+        .outputMode("complete") \
         .format("console") \
-        .start() 
-    
-    print(dir(query1))
-    print(type(query1), "!!!!")
-    query1.awaitTermination()
-    exit()
-    tmp = query1.rdd.foreach(print_json).collect()
-        
-    
+        .start()
 
-    # query1.awaitTermination()
-    spark.sparkContext.start()
-    spark.sparkContext.awaitTermination()
+    query.awaitTermination()
+    exit()
