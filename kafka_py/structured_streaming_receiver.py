@@ -13,9 +13,9 @@ from kafka.errors import KafkaError, KafkaTimeoutError
 from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.sql import SparkSession, Row
+
 from pyspark.sql.functions import explode
 from pyspark.sql.functions import split, decode
-#
 logger_format = '%(asctime)-15s %(message)s'
 logging.basicConfig(format=logger_format)
 logger = logging.getLogger('stream-processing')
