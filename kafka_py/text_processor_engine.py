@@ -16,7 +16,7 @@ class EnglishProcessor(object):
         self.cnt = 0
         self.wordswords = words.words() # 236736
         self.debug = False
-        self.load_vector_map() # 1055268
+        # self.load_vector_map() # 1055268
 
     def load_vector_map(self, path='vector_map.pkl'):
         # vectorization map
