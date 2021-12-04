@@ -3,6 +3,8 @@ import os
 import json
 from kafka import KafkaProducer
 
+import time
+
 # To set your environment variables in your terminal run the following line:
 # export 'BEARER_TOKEN'='<your_bearer_token>ß'
 bearer_token = os.environ.get("BEARER_TOKEN")
@@ -43,7 +45,8 @@ class twitter_stream():
                 msg_cnt += 1
                 if num_to_get != None and msg_cnt >= num_to_get:
                     kafka_producer.flush()
-                    break
+                    time.sleep(5)
+                    # break
         if response.status_code != 200:
             raise Exception(
                 "Request returned an error: {} {}".format(
