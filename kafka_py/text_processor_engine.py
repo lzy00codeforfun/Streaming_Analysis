@@ -3,29 +3,52 @@ from nltk.corpus import words
 from nltk.corpus import wordnet
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+import numpy as np
+import os
+import pickle
 import time
 
             
 class EnglishProcessor(object):
-    def __init__(self,):
+    def __init__(self):
         super().__init__()
         self.stopWords = set(stopwords.words('english')) # 179
         self.cnt = 0
         self.wordswords = words.words() # 236736
         self.debug = False
-        self.load_vector_model()
         self.load_vector_map() # 1055268
 
-    def load_vector_map(self,):
+    def load_vector_map(self, path='vector_map.pkl'):
         # vectorization map
+        if os.path.exists(path):
+            with open(path, 'rb') as pkl_file:
+                self.vector_map = pickle.load(pkl_file)
+            return 
+        self.load_vector_model()
         vector_map = {}
         # filter words start with @, http, #
         # filter words with the same lower letters (Hmf == hmf)
         # save the average vector
-        self.vector_model.words
+        word_list = self.vector_model.words
+        word_list = [word for word in word_list if not word.startswith("@") \
+                        and not word.startswith("http") and not word.startswith("#") \
+                        and not word.startswith("&") and len(word) > 2]
+        for word in word_list:
+            word = word.lower()
+            if word in vector_map:
+                vector_map[word].append(self.vector_model[word])
+            else:
+                vector_map[word] = [self.vector_model[word]]
+        
+        for word in list(vector_map.keys()):
+            vector_map[word] = np.array(vector_map[word]).mean(axis=0)
+        
+        print(len(list(vector_map.keys())))
         self.vector_map = vector_map
+        with open(path, 'wb') as pkl_file:
+            pickle.dump(vector_map, pkl_file)
 
-    def load_vector_model(self,):
+    def load_vector_model(self):
         # vectorization map
         import fasttext
         vector_model = fasttext.load_model('fasttext_twitter_raw.bin')
