@@ -34,8 +34,12 @@ export default {
     },
   },
   created() {
-    this.getRank();
+    setInterval(this.getRank(), 1000);
+    //this.getRank();
   },
+  beforeUnmount(){
+    clearInterval(this.imagePath);
+  }
 }
 </script>
 

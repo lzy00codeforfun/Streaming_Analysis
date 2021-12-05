@@ -7,6 +7,7 @@ import datetime
 import wordcloud
 import json
 
+TOPIC = "Twitter_WordCount"
 
 class word_cloud_thread(threading.Thread):
     def __init__(self, thread_id, begin_timestamp):
@@ -23,13 +24,13 @@ class word_cloud_thread(threading.Thread):
         if self.word_frequency:
             wc = wordcloud.WordCloud()
             wc.generate_from_frequencies(self.word_frequency)
-            wc.to_file("WordCloud.png")
+            wc.to_file("../frontend/src/assets/WordCloud.png")
         print("I AM DONE.", self.thread_id)
 
     def update_word_frequency(self):
         for message in message_list:
-            print(message)
-            print(isinstance(message, ConsumerRecord))
+            # print(message)
+            # print(isinstance(message, ConsumerRecord))
             if isinstance(message, ConsumerRecord):
                 message_value = message.value.decode("utf8")
                 message_value = json.loads(message_value)
@@ -39,7 +40,7 @@ class word_cloud_thread(threading.Thread):
 
                 if message_edts - 5 <= self.begin_timestamp \
                         and self.begin_timestamp <= message_edts:
-                    self.word_frequency[message_value["word"]] = message_value["count"]
+                    self.word_frequency[message_value["hashtag"]] = message_value["count"]
 
 
 class word_consumer_thread(threading.Thread):
@@ -54,7 +55,7 @@ class word_consumer_thread(threading.Thread):
         self.dump_message()
 
     def _generate_consumer(self):
-        self.consumer = KafkaConsumer('word_count',
+        self.consumer = KafkaConsumer(TOPIC,
                 group_id="A",
                 bootstrap_servers= ['localhost:9092'],
                 enable_auto_commit = True,

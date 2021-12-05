@@ -1,16 +1,17 @@
+from datetime import datetime
 from flask import Flask, send_file, jsonify
 from flask import request
 from flask_cors import CORS
-import os
-from datetime import datetime
 from random import randint
+import os
+
 app = Flask(__name__)
 CORS(app)
 
 @app.route('/')
 def hello_world():
     # return 'Hello Flask!'
-    return "This is Flask>"
+    return "This is Flask"
 
 @app.route("/hashtag_rank", methods=["GET"])
 def hashtag_rank():
