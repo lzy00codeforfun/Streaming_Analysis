@@ -35,30 +35,44 @@ if __name__ == "__main__":
     # sc.setLogLevel('ERROR')
     # ssc = StreamingContext(sc, 5)
 
-    spark = SparkSession.builder.appName('spark_word2vec').getOrCreate()
+    spark = SparkSession.builder.appName('spark_streaming').getOrCreate()
 
     spark.sparkContext.setLogLevel("WARN")
-    topic = 'quickstart-events'
+    topic = 'Twitter_streaming'
+    # topic = 'debug'
     bootstrap_servers = 'localhost:9092'
-    
+
     df = spark \
         .readStream \
         .format("kafka") \
         .option("kafka.bootstrap.servers", bootstrap_servers) \
         .option("subscribe", topic) \
         .load()
-    # df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)") 
+    # df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
 
     # Decode and Split the lines into words
+
+   # def get_text_info(x):
+   #     # spark sql json deserialize
+   #     # json_schema = spark.read.json(words.rdd.map(lambda row: row.json)).schema
+   #     text_map = from_json(x, "MAP<STRING,STRING>")
+   #     text_map = from_json(text_map["data"], "MAP<STRING,STRING>")
+   #     print("get_text_info:", text_map["text"], "!!!!!!!!!")
+   #     return text_map["text"]
+
+    @udf(returnType=StringType())
     def get_text_info(x):
-        # spark sql json deserialize 
+        # spark sql json deserialize
         # json_schema = spark.read.json(words.rdd.map(lambda row: row.json)).schema
-        text_map = from_json(x, "MAP<STRING,STRING>")
-        text_map = from_json(text_map["data"], "MAP<STRING,STRING>")
-        return text_map["text"]
-    
+        # print("get text info: input ------", x)
+        text_map = json.loads(x)['data']['text']
+        # text_map = from_json(text_map["data"], "MAP<STRING,STRING>")
+        # print("get_text_info:", text_map, "!!!!!!!!!")
+        return text_map
+
     @udf(returnType=StringType())
     def getHashTag(text):
+        # print("getHashTag:", text, ">>>>>>>>>>>")
         # hashtag & http
         # st = time.time()
         text = text.split(" ")
@@ -66,7 +80,7 @@ if __name__ == "__main__":
         for word in text:
             if word.startswith("#"):
                 hashtag_list.append(word)
-        
+
         hashtag = " ".join(hashtag_list)
         # print('hashtag time', time.time()-st)
         return hashtag
@@ -78,7 +92,7 @@ if __name__ == "__main__":
         text = text.split(" ")
         text = [word for word in text if word != "RT" or word[0] != "@" \
             or not word.startswith("#") or not word.startswith("http")]
-    
+
         # not english words
         text = " ".join(text)
         final_words = engtextproc.process(text)
@@ -88,7 +102,7 @@ if __name__ == "__main__":
     # engtextproc.load_vector_model()
     # vector_model = engtextproc.get_vector_model()
     @udf(returnType=StringType())
-    def get_vector(x):  
+    def get_vector(x):
         # global model
         print(type(x), x)
         words = x.split(" ")
@@ -103,7 +117,7 @@ if __name__ == "__main__":
         #         vector_lines.append([0.0])
         # print(vector_lines)
         return vector_lines
-        
+
     from pyspark.sql.functions import from_json, col
     # decode
     words = df.withColumn('value', decode(df.value, 'UTF-8'))  #.map(get_info)
@@ -139,21 +153,24 @@ if __name__ == "__main__":
         .groupBy(window(words.timestamp, "20 seconds", "5 seconds"),"hashtag") \
         .count()
 
-    # aggregation_query = words \
-    #     .writeStream \
-    #     .outputMode("update") \
-    #     .format("kafka") \
-    #     .option("checkpointLocation", "./wordcount_checkpoint") \
-    #     .option("kafka.bootstrap.servers", bootstrap_servers) \
-    #     .option("topic", "word_count") \
-    #     .start()
+    wordCounts.withColumn("value", wordCounts.hashtag)
 
     aggregation_query = wordCounts \
+        .selectExpr("CAST(window AS STRING) AS key", "to_json(struct(*)) AS value") \
         .writeStream \
-        .outputMode("complete") \
-        .format("console") \
-        .option("truncate", False) \
+        .outputMode("update") \
+        .format("kafka") \
+        .option("checkpointLocation", "./Twitter_WordCount_Checkpoint") \
+        .option("kafka.bootstrap.servers", bootstrap_servers) \
+        .option("topic", "Twitter_WordCount") \
         .start()
+
+    # aggregation_query = wordCounts \
+    #     .writeStream \
+    #     .outputMode("complete") \
+    #     .format("console") \
+    #     .option("truncate", False) \
+    #     .start()
 
     aggregation_query.awaitTermination()
 
