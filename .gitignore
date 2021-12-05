@@ -6,3 +6,6 @@ tmp_data_folder/
 
 # Ignore Temp Consumer Data
 */res_consumer.txt
+
+# Ignore node_modules
+*/node_modules/
