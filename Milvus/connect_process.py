@@ -12,15 +12,15 @@ schema = CollectionSchema([
             FieldSchema("text_id", DataType.INT64, is_primary=True),
             FieldSchema("text_vector", dtype=DataType.FLOAT_VECTOR, dim=400)
     ])
-collection = Collection("test_vector_search")
-collection.drop()
+# collection = Collection("test_vector_search")
+# collection.drop()
 collection = Collection("test_vector_search", schema, using='default', shards_num=5)
 import random
 import numpy as np
 # data = [
 #         list(np.random.rand(400)) for i in range(2000)
 #     ]
-data_num = 100000
+data_num = 10000
 data = [
         [i for i in range(0, data_num)],
         np.random.rand(data_num, 400).tolist()

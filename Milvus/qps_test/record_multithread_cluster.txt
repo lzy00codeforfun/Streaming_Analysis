@@ -1,0 +1,7 @@
+thread_num: 2, query_num: 12000, total time: 11.262006044387817
+thread_num: 4, query_num: 12000, total time: 11.520512104034424
+thread_num: 5, query_num: 12000, total time: 12.255477905273438
+thread_num: 8, query_num: 12000, total time: 13.152704000473022
+thread_num: 10, query_num: 12000, total time: 18.08452081680298
+thread_num: 15, query_num: 12000, total time: 17.882708072662354
+thread_num: 20, query_num: 12000, total time: 19.108172178268433
