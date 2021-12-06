@@ -7,7 +7,10 @@
 
     <el-row :gutter="24">
         <el-col :span="14" :offset="5">
-            <el-input v-model="message" v-on:keyup.enter="search" placeholder="Search Something">
+            <el-input v-model="message"
+              v-on:keyup.enter="search"
+              placeholder="Search Something"
+              :prefix-icon="Search">
             </el-input>
         </el-col>
 
