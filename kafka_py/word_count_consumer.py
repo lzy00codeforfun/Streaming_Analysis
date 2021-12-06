@@ -6,6 +6,7 @@ import time
 import datetime
 import wordcloud
 import json
+import imageio
 
 TOPIC = "Twitter_WordCount"
 
@@ -22,7 +23,11 @@ class word_cloud_thread(threading.Thread):
         self.update_word_frequency()
         print(self.word_frequency)
         if self.word_frequency:
-            wc = wordcloud.WordCloud()
+            color_list = ["#9B433E", "#E1B25B", "#45687B", "#4C6A4F"]
+            # mk = imageio.imread("DataCube.png")
+            # wc = wordcloud.WordCloud(background_color="white", mask=mk)
+            wc = wordcloud.WordCloud(background_color="white")
+            # wc = wordcloud.WordCloud()
             wc.generate_from_frequencies(self.word_frequency)
             wc.to_file("../frontend/src/assets/WordCloud.png")
         print("I AM DONE.", self.thread_id)
