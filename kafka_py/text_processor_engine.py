@@ -16,14 +16,21 @@ class EnglishProcessor(object):
         self.cnt = 0
         self.wordswords = words.words() # 236736
         self.debug = False
-        # self.load_vector_map() # 1055268
+        self.load_vector_map_path() # 1055268
+        self.vector_map_list = list(self.vector_map.keys())
+        del self.vector_map
 
-    def load_vector_map(self, path='vector_map.pkl'):
+    def load_vector_map_path(self, path='vector_map.pkl'):
         # vectorization map
         if os.path.exists(path):
+            print("load from path")
             with open(path, 'rb') as pkl_file:
                 self.vector_map = pickle.load(pkl_file)
+            print('load finished')
             return 
+
+    def load_vector_map(self, path='vector_map.pkl'):
+        print("load from scratch")
         self.load_vector_model()
         vector_map = {}
         # filter words start with @, http, #
@@ -78,6 +85,11 @@ class EnglishProcessor(object):
             st_inner = time.time()
         english_words = [word for word in text if word in self.wordswords]
         filtered_words = [word for word in text if word not in english_words]
+        # with fasttext vocab 
+        english_words = english_words + \
+                        [word for word in filtered_words if word in self.vector_map_list]
+        filtered_words = [word for word in text if word not in english_words]
+
         if self.debug:
             print("find words.words()", time.time()-st_inner)
 
@@ -88,7 +100,7 @@ class EnglishProcessor(object):
         if self.debug:
             print("find synsets", time.time()-st_inner)
 
-        if len(final_words) < 2: 
+        if len(final_words) < 1: 
             if self.debug:
                 print('proc time', time.time()-st, len(text))
             return []

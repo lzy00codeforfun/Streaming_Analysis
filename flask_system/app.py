@@ -5,8 +5,16 @@ from flask_cors import CORS
 from random import randint
 import os
 
+from kafka_py.milvus_model import MilvusModel
+
 app = Flask(__name__)
 CORS(app)
+
+# milvus
+# milvus_model = getMilvus()
+
+# sql Model
+# sql_M = SQLModel(Mode=2) # query mode
 
 @app.route('/')
 def hello_world():
@@ -19,6 +27,18 @@ def hashtag_rank():
     png_path = os.getcwd() + "/" + file_name
     response = jsonify({"png_path": png_path, "file_name": file_name})
     return response
+import json
+@app.route("/insert", methods = ['POST', 'GET'])
+def insert():
+    data = request.form.get("data")
+    data = json.loads(data)
+    vectors = data["vector"]
+    ids = data['id']
+    print(vectors, type(vectors))
+    response = jsonify({"msg_code": 500})
+    
+    return response
+    # milvus_model.insert(data)
 
 @app.route("/search")
 def search():
@@ -26,6 +46,8 @@ def search():
     # import XXX
     # XXX()
     # response = XXX
+    id_results = MilvusModel.search()
+    text_results = sql_M.query(id_results)
     message_0 = {"time": datetime.now(), "content": content, "hashtag": "#" + str(randint(0, 100))}
     message_1 = {"time": "2021-12-01", "content": "This is the First Tweet.", "hashtag": "#Hello"}
     message_2 = {"time": "2021-12-02", "content": "This is the Second Tweet.", "hashtag": "#Lakers"}
