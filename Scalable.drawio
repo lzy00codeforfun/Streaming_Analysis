@@ -1,0 +1,52 @@
+<mxfile host="app.diagrams.net" modified="2021-12-06T00:59:57.026Z" agent="5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36" etag="LGraDj3Stq9IWRQTAicz" version="15.7.4" type="github">
+  <diagram id="uWumjBzfKK-DYcUcIWJ8" name="Page-1">
+    <mxGraphModel dx="707" dy="301" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="evFKgA1f6qNcx_To9XT_-1" value="Kafka" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="90" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="evFKgA1f6qNcx_To9XT_-2" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endWidth=11.111111111111112;endSize=2.776666666666667;width=6.666666666666667;" edge="1" parent="1" target="evFKgA1f6qNcx_To9XT_-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="160" y="120" as="sourcePoint" />
+            <mxPoint x="160" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="evFKgA1f6qNcx_To9XT_-3" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endWidth=11.111111111111112;endSize=2.776666666666667;width=6.666666666666667;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="119.5" as="sourcePoint" />
+            <mxPoint x="440" y="119.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="evFKgA1f6qNcx_To9XT_-4" value="Streaming Twitter Data&lt;br&gt;(Multiple)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="99" y="83" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="evFKgA1f6qNcx_To9XT_-6" value="Spark Pre-Processing" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="370" y="91" width="130" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="evFKgA1f6qNcx_To9XT_-7" value="Kafka" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="evFKgA1f6qNcx_To9XT_-8" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endWidth=11.111111111111112;endSize=2.776666666666667;width=6.666666666666667;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="159.9999999999999" y="249.65999999999994" as="sourcePoint" />
+            <mxPoint x="239.9999999999999" y="249.65999999999994" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="evFKgA1f6qNcx_To9XT_-9" value="Processed Data" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="129" y="220" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="evFKgA1f6qNcx_To9XT_-10" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endWidth=11.111111111111112;endSize=2.776666666666667;width=6.666666666666667;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="360" y="249.5" as="sourcePoint" />
+            <mxPoint x="440" y="249.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="evFKgA1f6qNcx_To9XT_-11" value="Application Consuming&lt;br&gt;(Multiple)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="369" y="209" width="140" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,2 @@
+vector_map.pkl filter=lfs diff=lfs merge=lfs -text
+../backup_code/spark-streaming-kafka-0-10-assembly_2.12-3.2.0.jar filter=lfs diff=lfs merge=lfs -text
